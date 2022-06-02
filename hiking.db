@@ -1,0 +1,187 @@
+-- --------------------------------------------------------
+-- Host:                         C:\Users\eduma\Desktop\x22\try\y23-final-integrated-project\hiking.db
+-- Server version:               3.38.0
+-- Server OS:                    
+-- HeidiSQL Version:             12.0.0.6468
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES  */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for hiking
+CREATE DATABASE IF NOT EXISTS "hiking";
+;
+
+-- Dumping structure for table hiking.AspNetRoleClaims
+CREATE TABLE IF NOT EXISTS "AspNetRoleClaims" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_AspNetRoleClaims" PRIMARY KEY AUTOINCREMENT,
+    "RoleId" TEXT NOT NULL,
+    "ClaimType" TEXT NULL,
+    "ClaimValue" TEXT NULL,
+    CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId" FOREIGN KEY ("RoleId") REFERENCES "AspNetRoles" ("Id") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.AspNetRoles
+CREATE TABLE IF NOT EXISTS "AspNetRoles" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetRoles" PRIMARY KEY,
+    "Name" TEXT NULL,
+    "NormalizedName" TEXT NULL,
+    "ConcurrencyStamp" TEXT NULL
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.AspNetUserClaims
+CREATE TABLE IF NOT EXISTS "AspNetUserClaims" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_AspNetUserClaims" PRIMARY KEY AUTOINCREMENT,
+    "UserId" TEXT NOT NULL,
+    "ClaimType" TEXT NULL,
+    "ClaimValue" TEXT NULL,
+    CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.AspNetUserLogins
+CREATE TABLE IF NOT EXISTS "AspNetUserLogins" (
+    "LoginProvider" TEXT NOT NULL,
+    "ProviderKey" TEXT NOT NULL,
+    "ProviderDisplayName" TEXT NULL,
+    "UserId" TEXT NOT NULL,
+    CONSTRAINT "PK_AspNetUserLogins" PRIMARY KEY ("LoginProvider", "ProviderKey"),
+    CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.AspNetUserRoles
+CREATE TABLE IF NOT EXISTS "AspNetUserRoles" (
+    "UserId" TEXT NOT NULL,
+    "RoleId" TEXT NOT NULL,
+    CONSTRAINT "PK_AspNetUserRoles" PRIMARY KEY ("UserId", "RoleId"),
+    CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId" FOREIGN KEY ("RoleId") REFERENCES "AspNetRoles" ("Id") ON DELETE CASCADE,
+    CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.AspNetUsers
+CREATE TABLE IF NOT EXISTS "AspNetUsers" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetUsers" PRIMARY KEY,
+    "Discriminator" TEXT NOT NULL,
+    "Name" TEXT NULL,
+    "StreetNumber" INTEGER NULL,
+    "StreetName" TEXT NULL,
+    "PostalCode" TEXT NULL,
+    "City" TEXT NULL,
+    "Province" TEXT NULL,
+    "Phone" TEXT NULL,
+    "isAdmin" INTEGER NULL,
+    "UserName" TEXT NULL,
+    "NormalizedUserName" TEXT NULL,
+    "Email" TEXT NULL,
+    "NormalizedEmail" TEXT NULL,
+    "EmailConfirmed" INTEGER NOT NULL,
+    "PasswordHash" TEXT NULL,
+    "SecurityStamp" TEXT NULL,
+    "ConcurrencyStamp" TEXT NULL,
+    "PhoneNumber" TEXT NULL,
+    "PhoneNumberConfirmed" INTEGER NOT NULL,
+    "TwoFactorEnabled" INTEGER NOT NULL,
+    "LockoutEnd" TEXT NULL,
+    "LockoutEnabled" INTEGER NOT NULL,
+    "AccessFailedCount" INTEGER NOT NULL
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.AspNetUserTokens
+CREATE TABLE IF NOT EXISTS "AspNetUserTokens" (
+    "UserId" TEXT NOT NULL,
+    "LoginProvider" TEXT NOT NULL,
+    "Name" TEXT NOT NULL,
+    "Value" TEXT NULL,
+    CONSTRAINT "PK_AspNetUserTokens" PRIMARY KEY ("UserId", "LoginProvider", "Name"),
+    CONSTRAINT "FK_AspNetUserTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.Hike
+CREATE TABLE IF NOT EXISTS "Hike" (
+    "HikeId" INTEGER NOT NULL CONSTRAINT "PK_Hike" PRIMARY KEY AUTOINCREMENT,
+    "Name" TEXT NULL,
+    "Description" TEXT NULL,
+    "OrganizerId" TEXT NULL,
+    "ScheduledTime" TEXT NULL,
+    "RouteId" INTEGER NOT NULL,
+    CONSTRAINT "FK_Hike_AspNetUsers_OrganizerId" FOREIGN KEY ("OrganizerId") REFERENCES "AspNetUsers" ("Id"),
+    CONSTRAINT "FK_Hike_Route_RouteId" FOREIGN KEY ("RouteId") REFERENCES "Route" ("RouteId") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.Image
+CREATE TABLE IF NOT EXISTS "Image" (
+    "ImageId" INTEGER NOT NULL CONSTRAINT "PK_Image" PRIMARY KEY AUTOINCREMENT,
+    "Description" TEXT NULL,
+    "File" TEXT NULL,
+    "RouteId" INTEGER NOT NULL,
+    CONSTRAINT "FK_Image_Route_RouteId" FOREIGN KEY ("RouteId") REFERENCES "Route" ("RouteId") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.Point
+CREATE TABLE IF NOT EXISTS "Point" (
+    "PointId" INTEGER NOT NULL CONSTRAINT "PK_Point" PRIMARY KEY AUTOINCREMENT,
+    "Lat" decimal(9,6) NULL,
+    "Lng" decimal(9,6) NULL,
+    "RouteId" INTEGER NOT NULL, "IsStart" INTEGER NOT NULL DEFAULT 0,
+    CONSTRAINT "FK_Point_Route_RouteId" FOREIGN KEY ("RouteId") REFERENCES "Route" ("RouteId") ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.Route
+CREATE TABLE IF NOT EXISTS "Route" (
+    "RouteId" INTEGER NOT NULL CONSTRAINT "PK_Route" PRIMARY KEY AUTOINCREMENT,
+    "Name" TEXT NULL,
+    "Difficulty" INTEGER NOT NULL,
+    "Distance" INTEGER NOT NULL
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.Signup
+CREATE TABLE IF NOT EXISTS "Signup" (
+    "SignupId" INTEGER NOT NULL CONSTRAINT "PK_Signup" PRIMARY KEY AUTOINCREMENT,
+    "HikeUserId" TEXT NULL,
+    "HikeId" INTEGER NULL,
+    CONSTRAINT "FK_Signup_AspNetUsers_HikeUserId" FOREIGN KEY ("HikeUserId") REFERENCES "AspNetUsers" ("Id"),
+    CONSTRAINT "FK_Signup_Hike_HikeId" FOREIGN KEY ("HikeId") REFERENCES "Hike" ("HikeId")
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table hiking.__EFMigrationsHistory
+CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+    "MigrationId" TEXT NOT NULL CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY,
+    "ProductVersion" TEXT NOT NULL
+);
+
+-- Data exporting was unselected.
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
